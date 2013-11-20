@@ -1,0 +1,27 @@
+/**
+ * GoSlow configuration variables
+ *
+ * videos: Folder to find newly created LRV files from the videos.
+ * live:   The live stream of the camera.
+ * wifi:   The wifi password of the camera.
+ *
+ * Extra Variables
+ * sleep_timer:  How many idle seconds before the camera is turned off.
+ * live_timer:   How many seconds to display the live camera before recording.
+ * record_timer: How many seconds to record video.
+ * repeat:       How many times to playback the recorded video. It will be in
+ *               slow motion on the last play
+ *
+ * IMPORTANT: If this app is running on the camera, then you should remove the
+ *            "http://10.5.5.9:8080" text from "videos" and "live."
+ */
+var goslow = {
+  videos: "http://10.5.5.9:8080/videos/DCIM/120GOPRO/",
+  live: "http://10.5.5.9:8080/live/amba.m3u8",
+  wifi: "goprohero",
+  live_timer: 10,
+  title: "<strong>Slow Motion</strong> Video Booth",
+  instructions: "Record yourselves for 5 seconds, and a slow motion video compilation will be made after the wedding.",
+  playback_text: "Thank you!<br>We will create a slow motion compilation after the wedding.",
+  playback_slowmo: false
+}
