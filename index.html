@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>GoPro Video Booth</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- JQuery -->
+    <script src="lib/jquery/jquery-2.0.3.min.js"></script>
+    <!-- Bootstrap -->
+    <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <script src="lib/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- gopro files -->
+    <link href="css/goslow.css" rel="stylesheet" media="screen">
+    <script src="goslow-config.js"></script>
+    <script src="js/goslow-functions.js"></script>
+    <script src="js/goslow.js"></script>
+
+    <!-- Video JS -->
+    <link href="lib/video-js/video-js.min.css" rel="stylesheet" type="text/css">
+    <script src="lib/video-js/video.js"></script>
+  </head>
+
+  <body>
+    <div class="goslow-page container text-center" id="instructions">
+      <div class="row-fluid">
+        <div class="span12 text-center">
+          <p class="lead text-info" id="instructions-title"></p>
+          <div class="muted lead" id="instructions-text"></div>
+        </div>
+      </div>
+      <div class="row-fluid">
+        <div class="span12 text-center">
+          <video id="gopro_stream" autoplay loop class="video-js vjs-default-skin" width="640" height="356"
+            data-setup="{}">
+          </video>
+          <div class="muted delay-message">This display is delayed by a few seconds</div>
+        </div>
+      </div>
+      <div class="row-fluid">
+        <div class="col-sm-6 text-center">
+          <button type="button" class="start-button btn btn-warning btn-lg btn-block" data-video="slowmo">5 Second Slow Mo</button>
+        </div>
+        <div class="col-sm-6 text-center">
+          <button type="button" class="start-button btn btn-primary btn-lg btn-block" data-video="message">10 Second Message</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="hide-init goslow-page container text-center large-top-padding" id="countdown">
+      <div class="lead title" id="recording-info"></div>
+      <div class='lead text-danger title'>Recording will start in...</div>
+      <div class="count"></div>
+    </div>
+
+    <div class="hide-init goslow-page container-fluid text-center" id="recording">
+      <div class='lead title'>Now Recording</div>
+      <div id="recording-text"></div>
+      <div class="count"></div>
+    </div>
+
+    <div class="hide-init goslow-page container text-center large-top-padding" id="done">
+      <div class='lead title'><span id="playback_text"></span><span id="percent"></span></div>
+    </div>
+
+  </body>
+</html>
+
+
+
