@@ -20,11 +20,7 @@ This code is comprised of HTML, CSS, and JavaScript. The JavaScript sends comman
 
 ### The Camera's Webserver
 
-After you connect your device's WiFi to the camera, the webserver can be found at
-```
-http://10.5.5.9:8080
-```
-. Here you can browse through the files on the SD card using any web browser. GoSlow browses through this webserver to playback video after one is recorded.
+After you connect your device's WiFi to the camera, the webserver can be found at ``http://10.5.5.9:8080``. Here you can browse through the files on the SD card using any web browser. GoSlow browses through this webserver to playback video after one is recorded.
 
 ### The Camera's API
 
