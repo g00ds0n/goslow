@@ -1,12 +1,29 @@
 
 $(document).ready(function() {
-  powerOn();
-  previewOff();
+  $('.start-button').hide();
+  // Disable rubber band effect on mac browser
+  $(document).bind(
+    'touchmove',
+    function(e) {
+      e.preventDefault();
+    }
+  );
+
   // Initially load an example video
   videojs("gopro_stream").ready(function(){
     var stream = this;
     stream
-      .src({src: "clip.mp4", type: "video/mp4"});
+      .volume(0)
+      .src({src: "clip.mp4", type: "video/mp4"})
+      .on("loadedalldata", function(){
+        // Initialize the camera after the video loads
+        powerOn();
+        previewOff();
+        stopCapture();
+        $('.loading').hide();
+        // Show user buttons after camera checks out
+        $('.start-button').fadeIn().bind('click', ready);
+      })
       .on("error", function(xhr, status, error){
         // Reload this page if there's errors with
         // loading this video
@@ -16,15 +33,7 @@ $(document).ready(function() {
 
   $('#instructions-title').html(goslow.title);
   $('#instructions-text').html(goslow.instructions);
-  $('.start-button').bind('click', ready);
 
-  // Disable rubber band effect on mac browser
-  $(document).bind(
-    'touchmove',
-    function(e) {
-      e.preventDefault();
-    }
-  );
 });
 
 /**
