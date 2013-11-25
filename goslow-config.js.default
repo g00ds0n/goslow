@@ -6,6 +6,7 @@
  * wifi:   The wifi password of the camera.
  *
  * Extra Variables
+ * show_clip:       true shows clip.mp4 (not included); false shows goslow.png
  * live_timer:      How many seconds to display the live camera before
  *                  recording. 0 skips this entirely.
  * title:           The title that appears on the home page.
@@ -24,6 +25,7 @@ var goslow = {
   live: "http://10.5.5.9:8080/live/amba.m3u8",
   wifi: "goprohero",
 
+  show_clip: false,
   live_timer: 10,
   title: "<strong>GoSlow</strong> Video Booth",
   instructions: "Record a <span class='text-danger' style='font-size:1.2em'>video</span> for the event.",

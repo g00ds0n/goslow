@@ -12,24 +12,37 @@ $(document).ready(function() {
   // Initially load an example video
   videojs("gopro_stream").ready(function(){
     var stream = this;
-    stream
-      .volume(0)
-      .src({src: "clip.mp4", type: "video/mp4"})
-      .on("loadedalldata", function(){
-        // Initialize the camera after the video loads
-        powerOn();
-        previewOff();
-        stopCapture();
-        volume('00');
-        $('.loading').hide();
-        // Show user buttons after camera checks out
-        $('.start-button').fadeIn().bind('click', ready);
-      })
-      .on("error", function(xhr, status, error){
-        // Reload this page if there's errors with
-        // loading this video
-        error_restart();
-      });
+    if (goslow.show_clip) {
+      stream.src({src: "clip.mp4", type: "video/mp4"})
+        .on("loadedalldata", function(){
+          // Initialize the camera after the video loads
+          powerOn();
+          previewOff();
+          stopCapture();
+          volume('00');
+          $('.loading').hide();
+          // Show user buttons after camera checks out
+          $('.start-button').fadeIn().bind('click', ready);
+        })
+        .on("error", function(xhr, status, error){
+          // Reload this page if there's errors with
+          // loading this video
+          error_restart();
+        });
+    }
+    else {
+      // Hide the spinner when using just the poster
+      $('.vjs-loading-spinner').css('opacity', '0');
+      // Initialize the camera after the video loads
+      powerOn();
+      previewOff();
+      stopCapture();
+      volume('00');
+      fovWide();
+      // Show user buttons after camera checks out
+      $('.loading').hide();
+      $('.start-button').fadeIn().bind('click', ready);
+    }
   });
 
   $('#instructions-title').html(goslow.title);
@@ -43,6 +56,8 @@ $(document).ready(function() {
  * "goslow.live_timer" global variable in the config file
  */
 var ready = function() {
+  // Show the spinner over the video
+  $('.vjs-loading-spinner').css('opacity', '1');
   // Hide the button pressed and switch the other
   $(this).hide();
   $('.start-button').html($(this).html());
@@ -53,7 +68,6 @@ var ready = function() {
 
   var video_type = $(this).data('video');
 
-  fovWide();
   // Change video resolution
   switch(video_type) {
     case "slowmo":
