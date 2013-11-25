@@ -42,14 +42,15 @@ $(document).ready(function() {
  * "goslow.live_timer" global variable in the config file
  */
 var ready = function() {
-  var video_type = $(this).data('video');
-  // Hide the button pressed and switch the other to say Get Ready!
+  // Hide the button pressed and switch the other
   $(this).hide();
-  $('.start-button').html($(this).text());
+  $('.start-button').html($(this).html());
   $('.start-button').unbind().
     removeClass('btn-primary').removeClass('btn-warning').
     addClass('btn-danger').addClass('disabled').
     parent().removeClass('col-sm-6').addClass('col-sm-12');
+
+  var video_type = $(this).data('video');
 
   fovWide();
   // Change video resolution
@@ -69,7 +70,7 @@ var ready = function() {
       goslow.record_timer = 10;
       goslow.repeat = 1;
 
-      $('#recording-info').html('Leave a nice video message for the newlyweds');
+      $('#recording-info').html('Leave a nice video message');
       $('#recording-text').html('Message');
       break;
   }
