@@ -1,18 +1,6 @@
 
 $(document).ready(function() {
-  powerOn();
-  previewOff();
-  // Initially load an example video
-  videojs("gopro_stream").ready(function(){
-    var stream = this;
-    stream
-      .src({src: "clip.mp4", type: "video/mp4"});
-  });
-
-  $('#instructions-title').html(goslow.title);
-  $('#instructions-text').html(goslow.instructions);
-  $('.start-button').bind('click', ready);
-
+  $('.start-button').hide();
   // Disable rubber band effect on mac browser
   $(document).bind(
     'touchmove',
@@ -20,6 +8,32 @@ $(document).ready(function() {
       e.preventDefault();
     }
   );
+
+  // Initially load an example video
+  videojs("gopro_stream").ready(function(){
+    var stream = this;
+    stream
+      .volume(0)
+      .src({src: "clip.mp4", type: "video/mp4"})
+      .on("loadedalldata", function(){
+        // Initialize the camera after the video loads
+        powerOn();
+        previewOff();
+        stopCapture();
+        $('.loading').hide();
+        // Show user buttons after camera checks out
+        $('.start-button').fadeIn().bind('click', ready);
+      })
+      .on("error", function(xhr, status, error){
+        // Reload this page if there's errors with
+        // loading this video
+        error_restart();
+      });
+  });
+
+  $('#instructions-title').html(goslow.title);
+  $('#instructions-text').html(goslow.instructions);
+
 });
 
 /**
@@ -28,14 +42,15 @@ $(document).ready(function() {
  * "goslow.live_timer" global variable in the config file
  */
 var ready = function() {
-  var video_type = $(this).data('video');
-  // Hide the button pressed and switch the other to say Get Ready!
+  // Hide the button pressed and switch the other
   $(this).hide();
-  $('.start-button').html($(this).text());
+  $('.start-button').html($(this).html());
   $('.start-button').unbind().
     removeClass('btn-primary').removeClass('btn-warning').
     addClass('btn-danger').addClass('disabled').
     parent().removeClass('col-sm-6').addClass('col-sm-12');
+
+  var video_type = $(this).data('video');
 
   fovWide();
   // Change video resolution
@@ -55,7 +70,7 @@ var ready = function() {
       goslow.record_timer = 10;
       goslow.repeat = 1;
 
-      $('#recording-info').html('Leave a nice video message for the newlyweds');
+      $('#recording-info').html('Leave a nice video message');
       $('#recording-text').html('Message');
       break;
   }
@@ -80,6 +95,11 @@ var ready = function() {
           countdown();
         });
       }, goslow.live_timer * 1000);
+    })
+    .on("error", function(xhr, status, error){
+      // Reload this page if there's errors with
+      // loading the stream
+      error_restart('There was a problem loading the live stream from the camera. Please try again.');
     });
 };
 
@@ -214,6 +234,7 @@ function done() {
           var playback = videojs("gopro_playback");
           $('#done > video').remove();
           playback.dispose();
+          goslow.playback_text = "Sorry, there was an <span class='text-danger'>error</span> trying to playback your video.";
           skipPlayback();
         });
     });
