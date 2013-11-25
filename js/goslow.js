@@ -75,6 +75,7 @@ var ready = function() {
       break;
   }
 
+  if (goslow.live_timer > 0) {
   $('#instructions-title').fadeOut();
   $('#instructions-text').fadeOut(function(){
     $(this).html('<div class="text-danger" style="font-size:2.8em">Preview before you begin</div>').fadeIn();
@@ -101,6 +102,14 @@ var ready = function() {
       // loading the stream
       error_restart('There was a problem loading the live stream from the camera. Please try again.');
     });
+  }
+  else {
+    $('#instructions').fadeOut(function(){
+      videojs("gopro_stream").dispose();
+      modeVideo();
+      countdown();
+    });
+  }
 };
 
 function countdown() {
