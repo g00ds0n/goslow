@@ -20,6 +20,7 @@ $(document).ready(function() {
         powerOn();
         previewOff();
         stopCapture();
+        volume('00');
         $('.loading').hide();
         // Show user buttons after camera checks out
         $('.start-button').fadeIn().bind('click', ready);
@@ -76,32 +77,32 @@ var ready = function() {
   }
 
   if (goslow.live_timer > 0) {
-  $('#instructions-title').fadeOut();
-  $('#instructions-text').fadeOut(function(){
-    $(this).html('<div class="text-danger" style="font-size:2.8em">Preview before you begin</div>').fadeIn();
-  });
-
-  previewOn();
-  videojs("gopro_stream")
-    .volume(0)
-    .src({src: goslow.live, type: "video/mp4"})
-    .on("loadeddata", function(){
-      $('.delay-message').animate({'opacity':1}, 800);
-      setTimeout(function(){
-        videojs("gopro_stream").pause();
-        $('#instructions').fadeOut(function(){
-          previewOff();
-          videojs("gopro_stream").dispose();
-          modeVideo();
-          countdown();
-        });
-      }, goslow.live_timer * 1000);
-    })
-    .on("error", function(xhr, status, error){
-      // Reload this page if there's errors with
-      // loading the stream
-      error_restart('There was a problem loading the live stream from the camera. Please try again.');
+    $('#instructions-title').fadeOut();
+    $('#instructions-text').fadeOut(function(){
+      $(this).html('<div class="text-danger" style="font-size:2.8em">Preview before you begin</div>').fadeIn();
     });
+
+    previewOn();
+    videojs("gopro_stream")
+      .volume(0)
+      .src({src: goslow.live, type: "video/mp4"})
+      .on("loadeddata", function(){
+        $('.delay-message').animate({'opacity':1}, 800);
+        setTimeout(function(){
+          videojs("gopro_stream").pause();
+          $('#instructions').fadeOut(function(){
+            previewOff();
+            videojs("gopro_stream").dispose();
+            modeVideo();
+            countdown();
+          });
+        }, goslow.live_timer * 1000);
+      })
+      .on("error", function(xhr, status, error){
+        // Reload this page if there's errors with
+        // loading the stream
+        error_restart('There was a problem loading the live stream from the camera. Please try again.');
+      });
   }
   else {
     $('#instructions').fadeOut(function(){
@@ -114,6 +115,7 @@ var ready = function() {
 
 function countdown() {
   next_page("countdown");
+  volume('02');
   var count = 3;
   var countdown = setInterval(function(){
     $("#countdown .count").html(count).show().fadeOut(900);
