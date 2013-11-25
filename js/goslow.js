@@ -7,6 +7,11 @@ $(document).ready(function() {
     var stream = this;
     stream
       .src({src: "clip.mp4", type: "video/mp4"});
+      .on("error", function(xhr, status, error){
+        // Reload this page if there's errors with
+        // loading this video
+        error_restart();
+      });
   });
 
   $('#instructions-title').html(goslow.title);
@@ -80,6 +85,11 @@ var ready = function() {
           countdown();
         });
       }, goslow.live_timer * 1000);
+    })
+    .on("error", function(xhr, status, error){
+      // Reload this page if there's errors with
+      // loading the stream
+      error_restart('There was a problem loading the live stream from the camera. Please try again.');
     });
 };
 
@@ -214,6 +224,7 @@ function done() {
           var playback = videojs("gopro_playback");
           $('#done > video').remove();
           playback.dispose();
+          goslow.playback_text = "Sorry, there was an <span class='text-danger'>error</span> trying to playback your video.";
           skipPlayback();
         });
     });

@@ -1,4 +1,23 @@
 /**
+ * Block the page, show a message, and reload the whole thing
+ */
+function error_restart(m) {
+  var message = "There was a problem, please try again."
+  if (m !== undefined) {
+    message = m;
+  }
+  $('body').append('<div class="goslow-error-wrapper"></div><div class="alert alert-danger goslow-error">' + message + '</div>');
+  // Block the page
+  $('.goslow-error-wrapper').bind('click', function(){ return false; });
+
+  setTimeout(function() {
+    $('body').fadeOut(1000, function(){
+      location.reload();
+    });
+  }, 4000);
+}
+
+/**
  * Get the last LRV (or MP4) file from the URL defined by goslow.videos
  */
 function get_last() {
@@ -53,10 +72,14 @@ function command(cmd, val) {
   $.ajax({
     url: path,
     async: false,
+    timeout: 2000,
     success: function(data, status, xhr){
       if (status == 'success') {
         code = toHex(data);
       }
+    },
+    error: function(xhr, status, error){
+      error_restart('There was a problem connecting to the camera. Restarting the video booth.');
     },
     dataType: 'text'
   });
