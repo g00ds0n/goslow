@@ -93,30 +93,45 @@ var ready = function() {
   if (goslow.live_timer > 0) {
     $('#instructions-title').fadeOut();
     $('#instructions-text').fadeOut(function(){
-      $(this).html('<div class="text-danger" style="font-size:2.8em">Preview</div>').fadeIn();
+      var preview = '<div class="text-danger" style="font-size:2.8em">Preview';
+      if (goslow.test_mode == true) {
+        preview += ': Test Mode';
+      }
+      preview += '</div>';
+      $(this).html(preview).fadeIn();
     });
 
-    previewOn();
-    videojs("gopro_stream")
-      .volume(0)
-      .src({src: goslow.live, type: "video/mp4"})
-      .on("loadeddata", function(){
-        $('.delay-message').animate({'opacity':1}, 800);
-        setTimeout(function(){
-          videojs("gopro_stream").pause();
-          $('#instructions').fadeOut(function(){
-            previewOff();
-            videojs("gopro_stream").dispose();
-            modeVideo();
-            countdown();
-          });
-        }, goslow.live_timer * 1000);
-      })
-      .on("error", function(xhr, status, error){
-        // Reload this page if there's errors with
-        // loading the stream
-        error_restart('There was a problem loading the live stream from the camera. Please try again.');
-      });
+    if (goslow.test_mode != true) {
+      previewOn();
+      videojs("gopro_stream")
+        .volume(0)
+        .src({src: goslow.live, type: "video/mp4"})
+        .on("loadeddata", function(){
+          $('.delay-message').animate({'opacity':1}, 800);
+          setTimeout(function(){
+            videojs("gopro_stream").pause();
+            $('#instructions').fadeOut(function(){
+              previewOff();
+              videojs("gopro_stream").dispose();
+              modeVideo();
+              countdown();
+            });
+          }, goslow.live_timer * 1000);
+        })
+        .on("error", function(xhr, status, error){
+          // Reload this page if there's errors with
+          // loading the stream
+          error_restart('There was a problem loading the live stream from the camera. Please try again.');
+        });
+    }
+    else {
+      setTimeout(function(){
+        $('#instructions').fadeOut(function(){
+          videojs("gopro_stream").dispose();
+          countdown();
+        });
+      }, goslow.live_timer * 1000);
+    }
   }
   else {
     $('#instructions').fadeOut(function(){
@@ -202,7 +217,7 @@ function recording() {
 
 function done() {
   next_page("done");
-  if (goslow.repeat > 0) {
+  if (goslow.repeat > 0 && goslow.test_mode != true) {
     $('#done').append('<video id="gopro_playback" autoplay class="video-js vjs-default-skin" width="640" height="356"></video>');
     videojs("gopro_playback").ready(function(){
       var latestVideo = get_last();
@@ -292,6 +307,15 @@ function done() {
           skipPlayback();
         });
     });
+  }
+  else if (goslow.repeat > 0 && goslow.test_mode == true) {
+    $('#done').append('<img width="640" height="356" src="goslow.png">');
+    $('#playback_text').text('Test Mode: No Playback');
+    setTimeout(function(){
+      $('html').fadeOut(1000, function(){
+        location.reload();
+      });
+    }, 5000);
   }
   else {
     skipPlayback();

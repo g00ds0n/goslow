@@ -62,6 +62,9 @@ function get_last() {
  * https://github.com/PhilMacKay/PyGoPro/blob/master/goPro.py
  */
 function command(cmd, val) {
+  if (goslow.test_mode) {
+    return true;
+  }
   var path = 'http://10.5.5.9:80/' +
     cmd + '?t=' +
     goslow.wifi;
