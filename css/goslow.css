@@ -56,9 +56,9 @@ body {
   font-size: 6em;
   line-height: 1em;
 }
-.count {
+.count, .arrow {
   font-size: 20em;
-  line-height: 1em;
+  line-height: 1.1em;
 }
 
 #recording-info {

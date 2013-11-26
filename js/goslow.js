@@ -93,7 +93,7 @@ var ready = function() {
   if (goslow.live_timer > 0) {
     $('#instructions-title').fadeOut();
     $('#instructions-text').fadeOut(function(){
-      $(this).html('<div class="text-danger" style="font-size:2.8em">Preview before you begin</div>').fadeIn();
+      $(this).html('<div class="text-danger" style="font-size:2.8em">Preview</div>').fadeIn();
     });
 
     previewOn();
@@ -127,23 +127,52 @@ var ready = function() {
   }
 };
 
+/**
+ * Starts off a countdown before recording
+ */
 function countdown() {
   next_page("countdown");
+  // Turn up the volume on the camera so the recording beeps can be heard
   volume('02');
-  var count = 3;
-  var countdown = setInterval(function(){
-    $("#countdown .count").html(count).show().fadeOut(900);
-    count--;
-
-    if (count == -1) {
-      clearInterval(countdown);
-      setTimeout(function(){
-        $("#countdown").fadeOut(function(){
-          recording(goslow.record_timer);
+  // Display and animate an arrow pointing at the camera
+  $("#countdown .arrow").
+    html('<i class="fa fa-arrow-circle-' + goslow.direction + '"></i>').
+    css('opacity', '0').animate({'opacity':1}, 500, function(){
+      $("#countdown .arrow").animateRotate(360, 1500, function(){
+        // After the rotation tell them to get ready
+        $('#countdown .title').animate({'opacity':0}, 300, function(){
+          $('#countdown .title').html('Get Ready...').animate({'opacity':1}, 300);
         });
-      }, 1000);
-    }
-  }, 1000);
+
+        // Delay a second before running the countdown
+        setTimeout(function(){
+          // Remove the arrow to make room for the counter
+          $("#countdown .arrow").animate({'opacity':0}, 900, function(){
+            // Temporary fill prevents text from shifting on the screen
+            $("#countdown .count").css('opacity', 0).html('J');
+            $("#countdown .arrow").hide();
+          });
+          // Run the countdown timer
+          var count = 3;
+          var countdown = setInterval(function(){
+            $("#countdown .count").
+              css('opacity', 0).html(count).
+              css('opacity', 1).animate({'opacity':0}, 900);
+            count--;
+
+            if (count == 0) {
+              clearInterval(countdown);
+              setTimeout(function(){
+                $("#countdown").fadeOut(function(){
+                  // Start recording when the count is done
+                  recording();
+                });
+              }, 1000);
+            }
+          }, 1000);
+        }, 1000)
+      });
+    });
 }
 
 function recording() {
