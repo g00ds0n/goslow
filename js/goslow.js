@@ -1,18 +1,6 @@
 
 $(document).ready(function() {
-  powerOn();
-  previewOff();
-  // Initially load an example video
-  videojs("gopro_stream").ready(function(){
-    var stream = this;
-    stream
-      .src({src: "clip.mp4", type: "video/mp4"});
-  });
-
-  $('#instructions-title').html(goslow.title);
-  $('#instructions-text').html(goslow.instructions);
-  $('.start-button').bind('click', ready);
-
+  $('.start-button').hide();
   // Disable rubber band effect on mac browser
   $(document).bind(
     'touchmove',
@@ -20,6 +8,46 @@ $(document).ready(function() {
       e.preventDefault();
     }
   );
+
+  // Initially load an example video
+  videojs("gopro_stream").ready(function(){
+    var stream = this;
+    if (goslow.show_clip) {
+      stream.src({src: "clip.mp4", type: "video/mp4"})
+        .on("loadedalldata", function(){
+          // Initialize the camera after the video loads
+          powerOn();
+          previewOff();
+          stopCapture();
+          volume('00');
+          $('.loading').hide();
+          // Show user buttons after camera checks out
+          $('.start-button').fadeIn().bind('click', ready);
+        })
+        .on("error", function(xhr, status, error){
+          // Reload this page if there's errors with
+          // loading this video
+          error_restart();
+        });
+    }
+    else {
+      // Hide the spinner when using just the poster
+      $('.vjs-loading-spinner').css('opacity', '0');
+      // Initialize the camera after the video loads
+      powerOn();
+      previewOff();
+      stopCapture();
+      volume('00');
+      fovWide();
+      // Show user buttons after camera checks out
+      $('.loading').hide();
+      $('.start-button').fadeIn().bind('click', ready);
+    }
+  });
+
+  $('#instructions-title').html(goslow.title);
+  $('#instructions-text').html(goslow.instructions);
+
 });
 
 /**
@@ -28,16 +56,18 @@ $(document).ready(function() {
  * "goslow.live_timer" global variable in the config file
  */
 var ready = function() {
-  var video_type = $(this).data('video');
-  // Hide the button pressed and switch the other to say Get Ready!
+  // Show the spinner over the video
+  $('.vjs-loading-spinner').css('opacity', '1');
+  // Hide the button pressed and switch the other
   $(this).hide();
-  $('.start-button').html($(this).text());
+  $('.start-button').html($(this).html());
   $('.start-button').unbind().
     removeClass('btn-primary').removeClass('btn-warning').
     addClass('btn-danger').addClass('disabled').
     parent().removeClass('col-sm-6').addClass('col-sm-12');
 
-  fovWide();
+  var video_type = $(this).data('video');
+
   // Change video resolution
   switch(video_type) {
     case "slowmo":
@@ -55,50 +85,109 @@ var ready = function() {
       goslow.record_timer = 10;
       goslow.repeat = 1;
 
-      $('#recording-info').html('Leave a nice video message for the newlyweds');
+      $('#recording-info').html('Leave a nice video message');
       $('#recording-text').html('Message');
       break;
   }
 
-  $('#instructions-title').fadeOut();
-  $('#instructions-text').fadeOut(function(){
-    $(this).html('<div class="text-danger" style="font-size:2.8em">Preview before you begin</div>').fadeIn();
-  });
+  if (goslow.live_timer > 0) {
+    $('#instructions-title').fadeOut();
+    $('#instructions-text').fadeOut(function(){
+      var preview = '<div class="text-danger" style="font-size:2.8em">Preview';
+      if (goslow.test_mode == true) {
+        preview += ': Test Mode';
+      }
+      preview += '</div>';
+      $(this).html(preview).fadeIn();
+    });
 
-  previewOn();
-  videojs("gopro_stream")
-    .volume(0)
-    .src({src: goslow.live, type: "video/mp4"})
-    .on("loadeddata", function(){
-      $('.delay-message').animate({'opacity':1}, 800);
+    if (goslow.test_mode != true) {
+      previewOn();
+      videojs("gopro_stream")
+        .volume(0)
+        .src({src: goslow.live, type: "video/mp4"})
+        .on("loadeddata", function(){
+          $('.delay-message').animate({'opacity':1}, 800);
+          setTimeout(function(){
+            videojs("gopro_stream").pause();
+            $('#instructions').fadeOut(function(){
+              previewOff();
+              videojs("gopro_stream").dispose();
+              modeVideo();
+              countdown();
+            });
+          }, goslow.live_timer * 1000);
+        })
+        .on("error", function(xhr, status, error){
+          // Reload this page if there's errors with
+          // loading the stream
+          error_restart('There was a problem loading the live stream from the camera. Please try again.');
+        });
+    }
+    else {
       setTimeout(function(){
-        videojs("gopro_stream").pause();
         $('#instructions').fadeOut(function(){
-          previewOff();
           videojs("gopro_stream").dispose();
-          modeVideo();
           countdown();
         });
       }, goslow.live_timer * 1000);
+    }
+  }
+  else {
+    $('#instructions').fadeOut(function(){
+      videojs("gopro_stream").dispose();
+      modeVideo();
+      countdown();
     });
+  }
 };
 
+/**
+ * Starts off a countdown before recording
+ */
 function countdown() {
   next_page("countdown");
-  var count = 3;
-  var countdown = setInterval(function(){
-    $("#countdown .count").html(count).show().fadeOut(900);
-    count--;
-
-    if (count == -1) {
-      clearInterval(countdown);
-      setTimeout(function(){
-        $("#countdown").fadeOut(function(){
-          recording(goslow.record_timer);
+  // Turn up the volume on the camera so the recording beeps can be heard
+  volume('02');
+  // Display and animate an arrow pointing at the camera
+  $("#countdown .arrow").
+    html('<i class="fa fa-arrow-circle-' + goslow.direction + '"></i>').
+    css('opacity', '0').animate({'opacity':1}, 500, function(){
+      $("#countdown .arrow").animateRotate(360, 1500, function(){
+        // After the rotation tell them to get ready
+        $('#countdown .title').animate({'opacity':0}, 300, function(){
+          $('#countdown .title').html('Get Ready...').animate({'opacity':1}, 300);
         });
-      }, 1000);
-    }
-  }, 1000);
+
+        // Delay a second before running the countdown
+        setTimeout(function(){
+          // Remove the arrow to make room for the counter
+          $("#countdown .arrow").animate({'opacity':0}, 900, function(){
+            // Temporary fill prevents text from shifting on the screen
+            $("#countdown .count").css('opacity', 0).html('J');
+            $("#countdown .arrow").hide();
+          });
+          // Run the countdown timer
+          var count = 3;
+          var countdown = setInterval(function(){
+            $("#countdown .count").
+              css('opacity', 0).html(count).
+              css('opacity', 1).animate({'opacity':0}, 900);
+            count--;
+
+            if (count == 0) {
+              clearInterval(countdown);
+              setTimeout(function(){
+                $("#countdown").fadeOut(function(){
+                  // Start recording when the count is done
+                  recording();
+                });
+              }, 1000);
+            }
+          }, 1000);
+        }, 1000)
+      });
+    });
 }
 
 function recording() {
@@ -128,7 +217,7 @@ function recording() {
 
 function done() {
   next_page("done");
-  if (goslow.repeat > 0) {
+  if (goslow.repeat > 0 && goslow.test_mode != true) {
     $('#done').append('<video id="gopro_playback" autoplay class="video-js vjs-default-skin" width="640" height="356"></video>');
     videojs("gopro_playback").ready(function(){
       var latestVideo = get_last();
@@ -214,9 +303,19 @@ function done() {
           var playback = videojs("gopro_playback");
           $('#done > video').remove();
           playback.dispose();
+          goslow.playback_text = "Sorry, there was an <span class='text-danger'>error</span> trying to playback your video.";
           skipPlayback();
         });
     });
+  }
+  else if (goslow.repeat > 0 && goslow.test_mode == true) {
+    $('#done').append('<img width="640" height="356" src="goslow.png">');
+    $('#playback_text').text('Test Mode: No Playback');
+    setTimeout(function(){
+      $('html').fadeOut(1000, function(){
+        location.reload();
+      });
+    }, 5000);
   }
   else {
     skipPlayback();

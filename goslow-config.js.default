@@ -1,26 +1,40 @@
 /**
  * GoSlow configuration variables
  *
- * videos: Folder to find newly created LRV files from the videos.
- * live:   The live stream of the camera.
- * wifi:   The wifi password of the camera.
- *
- * Extra Variables
- * live_timer:      How many seconds to display the live camera before recording.
- * title:           The title that appears on the home page.
- * instructions:    Instructions that appear on the home page.
- * playback_text:   If the playback video is skipped, show this text.
- * playback_slowmo: True or false. Usually leave false because it takes about 90
- *                  seconds to transfer the file from the camera to an iPad. Also
- *                  an iPad can only play videos at 60 fps.
- *
  * IMPORTANT: If this app is running on the camera, then you should remove the
  *            "http://10.5.5.9:8080" text from "videos" and "live."
  */
+
 var goslow = {
+// Camera Variables
+//
+// videos:          Folder to find newly created LRV files from the videos
+//                   (usually http://10.5.5.9:8080/videos/DCIM/120GOPRO/).
+// live:            The live stream of the camera
+//                   (usually http://10.5.5.9:8080/live/amba.m3u8).
+// wifi:            The wifi password of the camera.
+// test_mode:       true runs the program without connecting to the camera
   videos: "http://10.5.5.9:8080/videos/DCIM/120GOPRO/",
   live: "http://10.5.5.9:8080/live/amba.m3u8",
   wifi: "goprohero",
+  test_mode: false,
+
+// Other Variables
+//
+// show_clip:       true shows clip.mp4 (not included); false shows goslow.png
+// direction:       The position of the camera relative to the device.
+//                   Values can be up, right, left, or down.
+// live_timer:      How many seconds to display the live camera before
+//                   recording. 0 skips this entirely.
+// title:           The title that appears on the home page.
+// instructions:    Instructions that appear on the home page.
+// playback_text:   If the playback video is skipped, show this text.
+// playback_slowmo: True or false. Usually leave false because it takes about 90
+//                   seconds to transfer the file from the camera to an iPad.
+//                   Also an iPad can only play videos at 60 fps, so 120 fps will
+//                   throw an error.
+  show_clip: false,
+  direction: 'up',
   live_timer: 10,
   title: "<strong>GoSlow</strong> Video Booth",
   instructions: "Record a <span class='text-danger' style='font-size:1.2em'>video</span> for the event.",

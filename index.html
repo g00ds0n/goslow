@@ -9,12 +9,17 @@
     <!-- Bootstrap -->
     <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
     <script src="lib/bootstrap/js/bootstrap.min.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="lib/font-awesome/css/font-awesome.css">
 
     <!-- gopro files -->
     <link href="css/goslow.css" rel="stylesheet" media="screen">
     <script src="goslow-config.js"></script>
     <script src="js/goslow-functions.js"></script>
     <script src="js/goslow.js"></script>
+
+    <!-- 3rd Party JS -->
+    <script src="js/animateRotate.js"></script>
 
     <!-- Video JS -->
     <link href="lib/video-js/video-js.min.css" rel="stylesheet" type="text/css">
@@ -31,13 +36,14 @@
       </div>
       <div class="row-fluid">
         <div class="span12 text-center">
-          <video id="gopro_stream" autoplay loop class="video-js vjs-default-skin" width="640" height="356"
-            data-setup="{}">
+          <video id="gopro_stream" autoplay loop class="video-js vjs-default-skin"
+            width="640" height="356" poster="goslow.png">
           </video>
           <div class="muted delay-message">This display is delayed by a few seconds</div>
         </div>
       </div>
       <div class="row-fluid">
+        <div class="loading">Please wait...</div>
         <div class="col-sm-6 text-center">
           <button type="button" class="start-button btn btn-warning btn-lg btn-block" data-video="slowmo">5 Second Hi Speed</button>
         </div>
@@ -48,9 +54,10 @@
     </div>
 
     <div class="hide-init goslow-page container text-center large-top-padding" id="countdown">
-      <div class="lead title" id="recording-info"></div>
-      <div class='lead text-danger title'>Recording will start in...</div>
+      <div class='lead text-danger title'>Look at Camera</div>
+      <div class="arrow"></div>
       <div class="count"></div>
+      <div class="muted" id="recording-info"></div>
     </div>
 
     <div class="hide-init goslow-page container-fluid text-center" id="recording">

@@ -56,9 +56,9 @@ body {
   font-size: 6em;
   line-height: 1em;
 }
-.count {
+.count, .arrow {
   font-size: 20em;
-  line-height: 1em;
+  line-height: 1.1em;
 }
 
 #recording-info {
@@ -95,4 +95,26 @@ body {
 
 .video-template {
   display: none;
+}
+
+.goslow-error-wrapper {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  background-color: black;
+  opacity: .5;
+}
+.goslow-error {
+  text-align: center;
+  top: 350px;
+  position: absolute;
+  width: 100%;
+  font-size: 30px;
+}
+
+.loading {
+  font-size: 40px;
+  color: #666;
 }
