@@ -14,15 +14,9 @@ $(document).ready(function() {
     var stream = this;
     if (goslow.show_clip) {
       stream.src({src: "clip.mp4", type: "video/mp4"})
-        .on("loadedalldata", function(){
+        .on("play", function(){
           // Initialize the camera after the video loads
-          powerOn();
-          previewOff();
-          stopCapture();
-          volume('00');
-          $('.loading').hide();
-          // Show user buttons after camera checks out
-          $('.start-button').fadeIn().bind('click', ready);
+          preload();
         })
         .on("error", function(xhr, status, error){
           // Reload this page if there's errors with
@@ -33,15 +27,8 @@ $(document).ready(function() {
     else {
       // Hide the spinner when using just the poster
       $('.vjs-loading-spinner').css('opacity', '0');
-      // Initialize the camera after the video loads
-      powerOn();
-      previewOff();
-      stopCapture();
-      volume('00');
-      fovWide();
-      // Show user buttons after camera checks out
-      $('.loading').hide();
-      $('.start-button').fadeIn().bind('click', ready);
+      // Initialize the camera after the page loads
+      preload();
     }
   });
 
@@ -49,6 +36,20 @@ $(document).ready(function() {
   $('#instructions-text').html(goslow.instructions);
 
 });
+
+/**
+ * Change camera's initial settings when the home page loads
+ */
+function preload() {
+  powerOn();
+  previewOff();
+  stopCapture();
+  volume('00');
+  fovWide();
+  $('.loading').hide();
+  // Show user buttons after camera checks out
+  $('.start-button').fadeIn().bind('click', ready);
+}
 
 /**
  * The "ready" page opens up a live stream from the camera, then
