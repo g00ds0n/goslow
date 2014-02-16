@@ -1,6 +1,17 @@
 GoSlow Changelog
 ================
 
+v1.2.0
+------
+**IMPORTANT:** ``goslow-config.js`` has changed. Make sure to update accordingly.
+
+* Updates the home screen to be image/video centric.
+* No longer need to specify the video folder, just the DCIM directory. It will automatically find the latest folder.
+
+v1.1.1
+------
+Hot fix release to rectify a problem with the 'loadedalldata' event. So this uses the 'play' event in its place.
+
 v1.1.0
 ------
 **IMPORTANT:** ``goslow-config.js`` has changed. Make sure to update accordingly.
