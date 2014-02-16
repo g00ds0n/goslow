@@ -26,16 +26,36 @@ function get_last() {
     url: url,
     async: false,
     success: function(data, status, xhr){
-      // Find the last anchor tag with the extension MP4
-      var latest = $("a:contains('MP4')", data).last().attr('href');
-      // Pull the filename
-      var filename = latest.substr(0, latest.indexOf('.'));
-      // Find an LRV if one exists
-      var lrv = $("a:contains('" + filename + ".LRV')", data).attr('href');
-      if (lrv !== undefined) {
-        latest = lrv;
-      }
-      url += latest;
+      url += $("tbody a.link", data).last().attr('href');
+      console.log(url);
+      $.ajax({
+        url: url,
+        async: false,
+        success: function(data1, status, xhr){
+          // Find the last anchor tag with the extension MP4
+          var latest = $("a:contains('MP4')", data1).last().attr('href');
+          // Pull the filename
+          var filename = latest.substr(0, latest.indexOf('.'));
+          // Find an LRV if one exists
+          var lrv = $("a:contains('" + filename + ".LRV')", data1).attr('href');
+          if (lrv !== undefined) {
+            latest = lrv;
+          }
+          url += latest;
+        },
+        error: function(xhr, status, error){
+          $('#done > h1').text("There was an error trying to find your video. Please try again.");
+          var playback = videojs("gopro_playback");
+          $('#done > video').remove();
+          playback.dispose();
+          setTimeout(function() {
+            $('body').fadeOut(1000, function(){
+              location.reload();
+            });
+          }, 9000);
+        },
+        dataType: 'html'
+      });
     },
     error: function(xhr, status, error){
       $('#done > h1').text("There was an error trying to find your video. Please try again.");
