@@ -32,9 +32,6 @@ $(document).ready(function() {
     }
   });
 
-  $('#instructions-title').html(goslow.title);
-  $('#instructions-text').html(goslow.instructions);
-
 });
 
 /**
@@ -48,7 +45,7 @@ function preload() {
   fovWide();
   $('.loading').hide();
   // Show user buttons after camera checks out
-  $('.start-button').fadeIn().bind('click', ready);
+  $('.start-button').show().bind('click', ready);
 }
 
 /**
@@ -77,7 +74,6 @@ var ready = function() {
       goslow.record_timer = 5;
       goslow.repeat = 0;
 
-      $('#recording-info').html('High speed video looks great in slow motion');
       $('#recording-text').html('High Speed');
       break;
     case "message":
@@ -86,7 +82,6 @@ var ready = function() {
       goslow.record_timer = 10;
       goslow.repeat = 1;
 
-      $('#recording-info').html('Leave a nice video message');
       $('#recording-text').html('Message');
       break;
   }
@@ -108,7 +103,7 @@ var ready = function() {
         .volume(0)
         .src({src: goslow.live, type: "video/mp4"})
         .on("loadeddata", function(){
-          $('.delay-message').animate({'opacity':1}, 800);
+          $('.delay-message').show(800);
           setTimeout(function(){
             videojs("gopro_stream").pause();
             $('#instructions').fadeOut(function(){
@@ -155,11 +150,6 @@ function countdown() {
     html('<i class="fa fa-arrow-circle-' + goslow.direction + '"></i>').
     css('opacity', '0').animate({'opacity':1}, 500, function(){
       $("#countdown .arrow").animateRotate(360, 1500, function(){
-        // After the rotation tell them to get ready
-        $('#countdown .title').animate({'opacity':0}, 300, function(){
-          $('#countdown .title').html('Get Ready...').animate({'opacity':1}, 300);
-        });
-
         // Delay a second before running the countdown
         setTimeout(function(){
           // Remove the arrow to make room for the counter
@@ -169,7 +159,7 @@ function countdown() {
             $("#countdown .arrow").hide();
           });
           // Run the countdown timer
-          var count = 3;
+          var count = 4;
           var countdown = setInterval(function(){
             $("#countdown .count").
               css('opacity', 0).html(count).
