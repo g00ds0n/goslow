@@ -32,9 +32,6 @@ $(document).ready(function() {
     }
   });
 
-  $('#instructions-title').html(goslow.title);
-  $('#instructions-text').html(goslow.instructions);
-
 });
 
 /**
