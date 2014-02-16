@@ -7,13 +7,16 @@ body {
 }
 
 .delay-message {
-  opacity: 0;
-  padding-bottom: 25px;
+  display: none;
   font-size: 2em;
 }
 
 .start-button {
   font-size: 3em;
+  margin-top: 12px;
+  -webkit-border-radius: 0 !important;
+  -moz-border-radius: 0 !important;
+  border-radius: 0 !important;
 }
 
 #startup {
@@ -33,7 +36,6 @@ body {
 }
 
 #instructions {
-  padding-top: 50px;
   height: 100%;
 }
 
@@ -68,7 +70,7 @@ body {
 #gopro_stream, #gopro_playback {
   padding: 25px 25px;
   margin: auto;
-  margin-bottom: 25px;
+  margin-bottom: 10px;
 }
 
 #recording {
@@ -117,4 +119,6 @@ body {
 .loading {
   font-size: 40px;
   color: #666;
+  margin-top: 50px;
+  margin-bottom: 100px;
 }
