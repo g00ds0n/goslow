@@ -14,15 +14,9 @@ $(document).ready(function() {
     var stream = this;
     if (goslow.show_clip) {
       stream.src({src: "clip.mp4", type: "video/mp4"})
-        .on("loadedalldata", function(){
+        .on("play", function(){
           // Initialize the camera after the video loads
-          powerOn();
-          previewOff();
-          stopCapture();
-          volume('00');
-          $('.loading').hide();
-          // Show user buttons after camera checks out
-          $('.start-button').fadeIn().bind('click', ready);
+          preload();
         })
         .on("error", function(xhr, status, error){
           // Reload this page if there's errors with
@@ -33,22 +27,26 @@ $(document).ready(function() {
     else {
       // Hide the spinner when using just the poster
       $('.vjs-loading-spinner').css('opacity', '0');
-      // Initialize the camera after the video loads
-      powerOn();
-      previewOff();
-      stopCapture();
-      volume('00');
-      fovWide();
-      // Show user buttons after camera checks out
-      $('.loading').hide();
-      $('.start-button').fadeIn().bind('click', ready);
+      // Initialize the camera after the page loads
+      preload();
     }
   });
 
-  $('#instructions-title').html(goslow.title);
-  $('#instructions-text').html(goslow.instructions);
-
 });
+
+/**
+ * Change camera's initial settings when the home page loads
+ */
+function preload() {
+  powerOn();
+  previewOff();
+  stopCapture();
+  volume('00');
+  fovWide();
+  $('.loading').hide();
+  // Show user buttons after camera checks out
+  $('.start-button').show().bind('click', ready);
+}
 
 /**
  * The "ready" page opens up a live stream from the camera, then
@@ -76,7 +74,6 @@ var ready = function() {
       goslow.record_timer = 5;
       goslow.repeat = 0;
 
-      $('#recording-info').html('High speed video looks great in slow motion');
       $('#recording-text').html('High Speed');
       break;
     case "message":
@@ -85,7 +82,6 @@ var ready = function() {
       goslow.record_timer = 10;
       goslow.repeat = 1;
 
-      $('#recording-info').html('Leave a nice video message');
       $('#recording-text').html('Message');
       break;
   }
@@ -107,7 +103,7 @@ var ready = function() {
         .volume(0)
         .src({src: goslow.live, type: "video/mp4"})
         .on("loadeddata", function(){
-          $('.delay-message').animate({'opacity':1}, 800);
+          $('.delay-message').show(800);
           setTimeout(function(){
             videojs("gopro_stream").pause();
             $('#instructions').fadeOut(function(){
@@ -154,11 +150,6 @@ function countdown() {
     html('<i class="fa fa-arrow-circle-' + goslow.direction + '"></i>').
     css('opacity', '0').animate({'opacity':1}, 500, function(){
       $("#countdown .arrow").animateRotate(360, 1500, function(){
-        // After the rotation tell them to get ready
-        $('#countdown .title').animate({'opacity':0}, 300, function(){
-          $('#countdown .title').html('Get Ready...').animate({'opacity':1}, 300);
-        });
-
         // Delay a second before running the countdown
         setTimeout(function(){
           // Remove the arrow to make room for the counter
@@ -168,7 +159,7 @@ function countdown() {
             $("#countdown .arrow").hide();
           });
           // Run the countdown timer
-          var count = 3;
+          var count = 4;
           var countdown = setInterval(function(){
             $("#countdown .count").
               css('opacity', 0).html(count).

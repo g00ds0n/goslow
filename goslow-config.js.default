@@ -8,13 +8,13 @@
 var goslow = {
 // Camera Variables
 //
-// videos:          Folder to find newly created LRV files from the videos
-//                   (usually http://10.5.5.9:8080/videos/DCIM/120GOPRO/).
+// videos:          The DCIM folder to find newly created videos
+//                   (usually http://10.5.5.9:8080/videos/DCIM/).
 // live:            The live stream of the camera
 //                   (usually http://10.5.5.9:8080/live/amba.m3u8).
 // wifi:            The wifi password of the camera.
 // test_mode:       true runs the program without connecting to the camera
-  videos: "http://10.5.5.9:8080/videos/DCIM/120GOPRO/",
+  videos: "http://10.5.5.9:8080/videos/DCIM/",
   live: "http://10.5.5.9:8080/live/amba.m3u8",
   wifi: "goprohero",
   test_mode: false,
@@ -36,8 +36,6 @@ var goslow = {
   show_clip: false,
   direction: 'up',
   live_timer: 10,
-  title: "<strong>GoSlow</strong> Video Booth",
-  instructions: "Record a <span class='text-danger' style='font-size:1.2em'>video</span> for the event.",
   playback_text: "<p>Thank you!<p style='font-size:0.8em'>Your video will be posted after the event.<br><br><p style='font-size:0.5em' class='text-danger'>Sorry, high speed videos are too large<br>to playback here.",
   playback_slowmo: false
 }
