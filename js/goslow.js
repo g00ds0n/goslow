@@ -12,6 +12,15 @@ $(document).ready(function() {
   // Initially load an example video
   videojs("gopro_stream").ready(function(){
     var stream = this;
+    var width = $(window).width();
+    var height = parseInt((width/16) * 9);
+    stream.width(width);
+    stream.height(height);
+    $('.start-button').width(parseInt(width/2));
+    $('.start-button').height($(window).height());
+    
+    $('.start-button button').height($(window).height() - height + 5);
+    $('.message').css({'left': parseInt(width/2) + 'px'});
     if (goslow.show_clip) {
       stream.src({src: "clip.mp4", type: "video/mp4"})
         .on("play", function(){
@@ -56,13 +65,8 @@ function preload() {
 var ready = function() {
   // Show the spinner over the video
   $('.vjs-loading-spinner').css('opacity', '1');
-  // Hide the button pressed and switch the other
-  $(this).hide();
-  $('.start-button').html($(this).html());
-  $('.start-button').unbind().
-    removeClass('btn-primary').removeClass('btn-warning').
-    addClass('btn-danger').addClass('disabled').
-    parent().removeClass('col-sm-6').addClass('col-sm-12');
+  $('.start-button').unbind().hide();
+  $('.buttons').addClass('btn-danger').addClass('lead').addClass('button-title');
 
   var video_type = $(this).data('video');
 
@@ -72,16 +76,16 @@ var ready = function() {
       resolution('720');
       frameRate(120);
       goslow.record_timer = 5;
-      goslow.repeat = 0;
-
+      goslow.repeat = goslow.show_slowmo;
+      $('.buttons').html('<p>High speed<p>selected');
       $('#recording-text').html('High Speed');
       break;
     case "message":
       resolution('1080');
       frameRate(24);
-      goslow.record_timer = 10;
-      goslow.repeat = 1;
-
+      goslow.record_timer = 15;
+      goslow.repeat = goslow.show_message;
+      $('.buttons').html('<p>Message<p>selected');
       $('#recording-text').html('Message');
       break;
   }
@@ -130,7 +134,7 @@ var ready = function() {
     }
   }
   else {
-    $('#instructions').fadeOut(function(){
+    $('#instructions').fadeOut(2000, function(){
       videojs("gopro_stream").dispose();
       modeVideo();
       countdown();

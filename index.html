@@ -35,12 +35,14 @@
         <div class="muted delay-message">This display is delayed by a few seconds</div>
       </div>
       <div class="loading">Please wait...</div>
-      <span class="text-center">
-        <button type="button" class="start-button btn btn-warning btn-lg btn-block" data-video="slowmo">5 Second High Speed Video</button>
-      </span>
-      <span class="text-center">
-        <button type="button" class="start-button btn btn-primary btn-lg btn-block" data-video="message">10 Second Video Message</button>
-      </span>
+      <div class="buttons">
+        <span class="text-center start-button slowmo" data-video="slowmo">
+          <button type="button" class="btn btn-warning btn-lg btn-block">5s Hi Speed</button>
+        </span>
+        <span class="text-center start-button message" data-video="message">
+          <button type="button" class="btn btn-primary btn-lg btn-block">15s Message</button>
+        </span>
+      </div>
     </div>
 
     <div class="hide-init goslow-page container text-center large-top-padding" id="countdown">
